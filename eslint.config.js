@@ -20,4 +20,5 @@ export default defineConfig([
     },
   },
   { ignores: ['1'] },
+  { ignores: ['1'] },
 ])
