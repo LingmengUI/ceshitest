@@ -55,6 +55,7 @@ describe('domain utilities', () => {
     const settings = {
       ...defaultSettings,
       theme: 'dark' as const,
+      compactListDensity: true,
       notifications: {
         ...defaultSettings.notifications,
         taskFailures: false,
@@ -65,6 +66,7 @@ describe('domain utilities', () => {
     const restored = readPersistedSettings(storage)
 
     expect(restored.theme).toBe('dark')
+    expect(restored.compactListDensity).toBe(true)
     expect(restored.notifications.taskFailures).toBe(false)
     expect(restored.notifications.providerDegradation).toBe(true)
   })

@@ -43,6 +43,7 @@ export function TaskBoardPage({
 }) {
   const [editingTask, setEditingTask] = useState<OpsTask | null>(null)
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
+  const [dragOverStatus, setDragOverStatus] = useState<TaskStatus | null>(null)
   const [error, setError] = useState('')
 
   const agentById = useMemo(() => new Map(agents.map((agent) => [agent.id, agent])), [agents])
@@ -104,12 +105,17 @@ export function TaskBoardPage({
           <div className="kanban" aria-label="Task status board">
             {tasksByStatus.map((column) => (
               <section
-                className="kanban-column"
+                className={`kanban-column ${dragOverStatus === column.status ? 'drag-over' : ''}`}
                 key={column.status}
+                onDragEnter={() => setDragOverStatus(column.status)}
                 onDragOver={(event) => event.preventDefault()}
+                onDragLeave={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragOverStatus(null)
+                }}
                 onDrop={() => {
                   if (draggedTaskId) onMoveTask(draggedTaskId, column.status)
                   setDraggedTaskId(null)
+                  setDragOverStatus(null)
                 }}
               >
                 <header>
@@ -119,7 +125,16 @@ export function TaskBoardPage({
                 <div className="task-stack">
                   {column.tasks.length === 0 ? <p className="empty-column">Drop tasks here</p> : null}
                   {column.tasks.map((task) => (
-                    <article className="task-card" draggable key={task.id} onDragStart={() => setDraggedTaskId(task.id)}>
+                    <article
+                      className={`task-card ${draggedTaskId === task.id ? 'is-dragging' : ''}`}
+                      draggable
+                      key={task.id}
+                      onDragStart={() => setDraggedTaskId(task.id)}
+                      onDragEnd={() => {
+                        setDraggedTaskId(null)
+                        setDragOverStatus(null)
+                      }}
+                    >
                       <div className="task-card-header">
                         <Badge value={task.priority} />
                         <Badge value={task.status} />

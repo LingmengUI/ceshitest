@@ -69,6 +69,7 @@ export interface Incident {
 
 export interface Settings {
   theme: ThemePreference
+  compactListDensity: boolean
   costWarningThreshold: number
   defaultProvider: ProviderKey
   notifications: {

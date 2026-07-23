@@ -73,9 +73,9 @@ export function Shell({
         </div>
         {nav}
         <div className="sidebar-card">
-          <span className="eyebrow">Readiness</span>
-          <strong>97.2%</strong>
-          <p>Live routes healthy across production</p>
+        <span className="eyebrow">Platform status</span>
+        <strong>All systems nominal</strong>
+        <p>6 providers · 10 agents · online</p>
         </div>
       </aside>
 
@@ -92,7 +92,11 @@ export function Shell({
           </label>
           <div className="topbar-actions">
             <button className="notification-button" type="button" aria-label={`${notificationCount} critical notifications`}>
-              🔔<span>{notificationCount}</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span>{notificationCount}</span>
             </button>
             <select value={theme} onChange={(event) => onThemeChange(event.target.value as ThemePreference)} aria-label="Theme preference">
               <option value="system">System</option>
@@ -100,8 +104,13 @@ export function Shell({
               <option value="dark">Dark</option>
             </select>
             <Button className="user-menu" variant="ghost" aria-label="User menu">
-              <span className="avatar">OP</span>
-              Morgan Lee
+              <span className="avatar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M20 21a8 8 0 0 0-16 0"/>
+                </svg>
+              </span>
+              ops@xinr.io
             </Button>
           </div>
         </header>

@@ -66,6 +66,9 @@ export function DashboardPage({
   const providerNames = new Map(providers.map((provider) => [provider.id, provider.name]))
   const urgentRunningTasks = tasks.filter((task) => task.status === 'running' && task.priority === 'urgent').length
   const openIncidents = incidents.filter((incident) => incident.status !== 'resolved').length
+  const todayUnhandledIncidents = incidents.filter((incident) => (
+    incident.status !== 'resolved' && /^\d{2}:\d{2}$/.test(incident.time)
+  )).length
 
   return (
     <div className="page-grid dashboard-grid dashboard-health editorial-page" data-page="dashboard">
@@ -78,7 +81,8 @@ export function DashboardPage({
         <Badge value="running" label="实时遥测 / Live telemetry" />
       </section>
 
-      <section className="summary-strip wide-panel" aria-label="AI 团队健康摘要 / AI workforce health summary">
+      <section className="summary-strip wide-panel dashboard-summary-strip" aria-label="AI 团队健康摘要 / AI workforce health summary">
+        <StatCard label="今日未处理事件 / Unhandled today" value={String(todayUnhandledIncidents)} delta="来自今日 mock 遥测 / today's mock telemetry" tone={todayUnhandledIncidents ? 'danger' : 'success'} />
         <StatCard label="活跃 Agent / Active agents" value={String(dashboard.activeAgents)} delta={`${statusCounts.online} 在线 / online`} tone={statusCounts.degraded || statusCounts.offline ? 'warning' : 'success'} />
         <StatCard label="团队成功率 / Team success rate" value={`${dashboard.successRate}%`} delta={`${attentionAgents.length} 个需关注 / need attention`} tone={dashboard.successRate >= 97 ? 'success' : 'warning'} />
         <StatCard label="运行中任务 / Running tasks" value={String(dashboard.runningTasks)} delta={`${urgentRunningTasks} 个紧急 / urgent`} tone={urgentRunningTasks ? 'warning' : 'info'} />

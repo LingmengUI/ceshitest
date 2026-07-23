@@ -232,7 +232,8 @@ export function AppRoot() {
 
   return (
     <>
-      <Shell
+      <div className={settings.compactListDensity ? 'density-compact' : ''}>
+        <Shell
         activePage={activePage}
         globalSearch={globalSearch}
         mobileOpen={mobileOpen}
@@ -255,7 +256,8 @@ export function AppRoot() {
           <IncidentsPage agents={agents} incidents={incidents} loading={loading} providers={providers} onResolveIncident={requestResolveIncident} />
         ) : null}
         {activePage === 'settings' ? <SettingsPage providers={providers} settings={settings} onSaveSettings={saveSettings} /> : null}
-      </Shell>
+        </Shell>
+      </div>
       <ToastRegion toasts={toasts} onDismiss={(id) => setToasts((current) => current.filter((toast) => toast.id !== id))} />
       {confirm ? <ConfirmDialog title={confirm.title} message={confirm.message} confirmLabel={confirm.confirmLabel} onCancel={() => setConfirm(null)} onConfirm={confirm.onConfirm} /> : null}
     </>

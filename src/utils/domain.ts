@@ -47,6 +47,7 @@ function isOpsTask(value: unknown): value is OpsTask {
 function isPersistedSettings(value: unknown): value is PersistedSettings {
   if (!isRecord(value)) return false
   if (value.theme !== undefined && !THEMES.includes(value.theme as typeof THEMES[number])) return false
+  if (value.compactListDensity !== undefined && typeof value.compactListDensity !== 'boolean') return false
   if (value.costWarningThreshold !== undefined && (
     typeof value.costWarningThreshold !== 'number' ||
     !Number.isFinite(value.costWarningThreshold) ||
@@ -54,14 +55,15 @@ function isPersistedSettings(value: unknown): value is PersistedSettings {
   )) return false
   if (value.defaultProvider !== undefined && !PROVIDER_KEYS.includes(value.defaultProvider as typeof PROVIDER_KEYS[number])) return false
   if (value.notifications !== undefined) {
-    if (!isRecord(value.notifications)) return false
+    const notifications = value.notifications
+    if (!isRecord(notifications)) return false
     const keys: (keyof Settings['notifications'])[] = [
       'criticalAlerts',
       'weeklyCostDigest',
       'providerDegradation',
       'taskFailures',
     ]
-    if (keys.some((key) => value.notifications?.[key] !== undefined && typeof value.notifications[key] !== 'boolean')) {
+    if (keys.some((key) => notifications[key] !== undefined && typeof notifications[key] !== 'boolean')) {
       return false
     }
   }

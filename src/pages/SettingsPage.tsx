@@ -48,6 +48,14 @@ export function SettingsPage({
                 <option value="dark">Dark</option>
               </select>
             </label>
+            <label className="toggle-row">
+              <span>Compact list density</span>
+              <input
+                checked={draft.compactListDensity}
+                type="checkbox"
+                onChange={(event) => setDraft({ ...draft, compactListDensity: event.target.checked })}
+              />
+            </label>
           </section>
 
           <section className="settings-card">

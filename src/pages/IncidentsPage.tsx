@@ -1,7 +1,15 @@
 // Page: IncidentsPage.tsx
 import { useState } from 'react'
-import type { Agent, Incident, ProviderConfig } from '../types'
+import type { Agent, Incident, IncidentSeverity, ProviderConfig } from '../types'
 import { Badge, Button, EmptyState, Modal, Panel, Skeleton } from '../components/ui'
+
+const SEVERITY_FILTERS: Array<{ value: 'all' | IncidentSeverity; label: string }> = [
+  { value: 'all', label: 'All severities' },
+  { value: 'sev1', label: 'Sev1' },
+  { value: 'sev2', label: 'Sev2' },
+  { value: 'sev3', label: 'Sev3' },
+  { value: 'sev4', label: 'Sev4' },
+]
 
 export function IncidentsPage({
   agents,
@@ -17,6 +25,10 @@ export function IncidentsPage({
   onResolveIncident: (incident: Incident) => void
 }) {
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null)
+  const [severityFilter, setSeverityFilter] = useState<'all' | IncidentSeverity>('all')
+  const visibleIncidents = severityFilter === 'all'
+    ? incidents
+    : incidents.filter((incident) => incident.severity === severityFilter)
 
   function agentName(agentId: string) {
     return agents.find((agent) => agent.id === agentId)?.name ?? 'Unknown agent'
@@ -54,11 +66,21 @@ export function IncidentsPage({
           <Badge value="sev2" label={`${incidents.filter((incident) => incident.status !== 'resolved').length} active`} />
         </div>
 
-        {incidents.length === 0 ? (
-          <EmptyState title="No incidents reported" message="All monitored AI operations are currently within policy thresholds." />
+        <div className="incident-filter-bar">
+          <label>
+            <span>Severity</span>
+            <select value={severityFilter} onChange={(event) => setSeverityFilter(event.target.value as 'all' | IncidentSeverity)}>
+              {SEVERITY_FILTERS.map((filter) => <option key={filter.value} value={filter.value}>{filter.label}</option>)}
+            </select>
+          </label>
+          <span className="muted">{visibleIncidents.length} of {incidents.length} incidents</span>
+        </div>
+
+        {visibleIncidents.length === 0 ? (
+          <EmptyState title="No incidents match this severity" message="Choose another severity to inspect the incident queue." />
         ) : (
           <div className="incident-list">
-            {incidents.map((incident) => (
+            {visibleIncidents.map((incident) => (
               <article className="incident-row" key={incident.id}>
                 <div className="incident-main">
                   <Badge value={incident.severity} />
